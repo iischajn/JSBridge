@@ -61,7 +61,7 @@
     NSURL* filePathUrl = [NSURL fileURLWithPath:filePath];
     SEL sel = NSSelectorFromString(@"loadFileURL:allowingReadAccessToURL:");
     if ([self.webView respondsToSelector:sel]) {
-        [self.webView loadFileURL:filePathUrl allowingReadAccessToURL:filePathUrl];
+        [self.webView loadFileURL:filePathUrl allowingReadAccessToURL:[NSURL fileURLWithPath:dirPath]];
     } else {
         [self.webView loadRequest:[NSURLRequest requestWithURL:filePathUrl]];
     }
