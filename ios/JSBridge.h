@@ -12,20 +12,35 @@
 
 typedef void (^JSBridgeResponseCallback)(NSString *response);
 typedef void (^JSBridgeHandler)(id data, JSBridgeResponseCallback response);
+typedef void(^BridgeScrollBlock)(UIScrollView *scrollView);
 
-@interface JSBridge : NSObject <WKScriptMessageHandler>;
+@interface JSBridge : NSObject <WKScriptMessageHandler,WKNavigationDelegate,UIScrollViewDelegate>;
 
-@property (strong) WKWebView *webView;
+@property (strong) WKWebView *wkwebview;
+
+@property (strong) UIWebView *uiwebview;
+
+@property UIView *webView;
+
+@property(nonatomic) BOOL isContentReady;
+
+@property (strong) MBProgressHUD *hud;
+
+@property (nonatomic,copy) BridgeScrollBlock bridgeScrollBlock;
 
 @property (readwrite, nonatomic, strong) NSMutableDictionary *handlerList;
 
 - (instancetype)initWithFrame:(CGRect)frame;
 
-- (void)loadPage:(NSString *) pageName viewBg:(NSString *)bg initJS:(NSString *)initJS;
+- (void)loadUrl:(NSString *)url initJS:(NSString *)initJS;
 
-//- (NSString *)pathForWKWebViewSandboxBugWithOriginalPath:(NSString *)filePath;
+- (void)loadPage:(NSString *)pageName initData:(NSDictionary *)dicData;
+
+- (void)loadPage:(NSString *) pageName initJS:(NSString *)initJS;
 
 - (void)execJS:(NSString *)funcName jsStr:(NSString *)jsStr isBridage:(BOOL)isBridage;
+
+-(void) registerWebComp:(UIViewController *) weakView;
 
 - (void) registerHandler: (NSString*) handlerName handler: (JSBridgeHandler)handler;
 
@@ -35,6 +50,7 @@ typedef void (^JSBridgeHandler)(id data, JSBridgeResponseCallback response);
 
 //- (void) callHandler: (NSString*) handlerName jsonData: (NSString *) jsonData responseCallback: (JSBridgeResponseCallback) responseCallback;
 
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation;
 
 @end
 
