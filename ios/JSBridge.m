@@ -71,7 +71,7 @@
     }
     
     if(![AFNetworkReachabilityManager sharedManager].reachable){
-        [self loadPage:@"offline" initJS:[NSString stringWithFormat:@"NativeReady({reload:1,url:'%@',local:0})",url]];
+        [self loadPage:@"offline" initJS:[NSString stringWithFormat:@"nativeReady({reload:1,url:'%@',local:0})",url]];
         return;
     }
     
@@ -91,6 +91,8 @@
     [self.wkwebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
     
     [self showLoadingInView];
+    
+    [self registerCommonComp];
 }
 
 - (void)loadPage:(NSString *)pageName initData:(NSDictionary *)dicData {
@@ -158,6 +160,9 @@
        ![pageName  isEqual: @"bfr_record"]){
         [self showLoadingInView];
     }
+    
+    [self registerCommonComp];
+    
 }
 
 - (BOOL)checkCachePath {
@@ -274,10 +279,16 @@
     [self execJS:@"execCallback" jsStr:jsonData isBridage: YES];
 }
 
--(void) registerWebComp:(UIViewController *) weakView{
+-(void) registerCommonComp {
+    
     [self registerHandler:@"contentReady" handler:^(id data, JSBridgeResponseCallback response) {
         self.isContentReady = YES;
     }];
+}
+
+
+-(void) registerWebComp:(UIViewController *) weakView{
+
 }
 
 
